@@ -1,0 +1,10 @@
+node_modules
+
+# DB
+/prisma/migrations
+/prisma/generated
+/prisma/dev.db
+/prisma/dev.db-journal
+/dist
+.env
+.vercel
