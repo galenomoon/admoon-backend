@@ -13,7 +13,11 @@ export default class SuperUserUseCase {
     const passwordMatches = await comparePasswords(password, user.password);
     if (!passwordMatches) throw new AppError("Invalid password", 401);
 
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: "superuser",
+    });
     return { token };
   }
 
@@ -39,12 +43,6 @@ export default class SuperUserUseCase {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-    }
-  }
-
-  async currentUser(id: number) {
-    const user = await superUserModel.getById(id);
-    if (!user) throw new AppError("User not found", 404);
-    return user;
+    };
   }
 }

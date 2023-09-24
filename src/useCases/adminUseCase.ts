@@ -1,24 +1,28 @@
 import { IUser } from "../interfaces/user";
-import UserModel from "../models/userModel";
+import AdminModel from "../models/adminModel";
 import { AppError } from "../errors/appError";
 import { comparePasswords, generateToken, hashPassword } from "../utils/auth";
 
-const userModel = new UserModel();
+const adminModel = new AdminModel();
 
 export default class UserUseCase {
   async login({ email, password }: IUser) {
-    const user = await userModel.getByEmail(email);
+    const user = await adminModel.getByEmail(email);
     if (!user) throw new AppError("User not found", 404);
 
     const passwordMatches = await comparePasswords(password, user.password);
     if (!passwordMatches) throw new AppError("Invalid password", 401);
 
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: "admin",
+    });
     return { token };
   }
 
   async register({ firstName, lastName, email, password }: IUser) {
-    const userAlreadyExists = await userModel.getByEmail(email);
+    const userAlreadyExists = await adminModel.getByEmail(email);
     if (userAlreadyExists) throw new AppError("User already exists", 409);
 
     if (!firstName) throw new AppError("First name is required");
@@ -27,7 +31,7 @@ export default class UserUseCase {
     if (!password) throw new AppError("Password is required");
 
     const hashedPassword = await hashPassword(password);
-    const user = await userModel.create({
+    const user = await adminModel.create({
       firstName,
       lastName,
       email,
@@ -35,11 +39,5 @@ export default class UserUseCase {
     });
     const token = generateToken({ id: user.id, email: user.email });
     return { token };
-  }
-
-  async currentUser(id: number) {
-    const user = await userModel.getById(id);
-    if (!user) throw new AppError("User not found", 404);
-    return user;
   }
 }

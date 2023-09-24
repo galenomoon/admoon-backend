@@ -1,12 +1,14 @@
 import { Router } from 'express'
-import userRoutes from './user.routes'
+import adminRoutes from './admin.routes'
+import authRoutes from './auth.routes'
 import productsRoutes from './products.routes'
 import superUserRoutes from './superUser.routes'
 import categoriesRoutes from './categories.routes'
 import imagesRoutes from './images.routes'
 const routes = Router()
 
-routes.use('/users', userRoutes)
+routes.use('/auth', authRoutes)
+routes.use('/admins', adminRoutes)
 routes.use('/superusers', superUserRoutes)
 routes.use('/products', productsRoutes)
 routes.use('/categories', categoriesRoutes)

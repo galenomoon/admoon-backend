@@ -15,6 +15,7 @@ export const authenticateToken = (req: any, res: any, next: any) => {
     }
     
     req.currentUserId = decoded.id;
+    req.currentUserRole = decoded.role;
     next();
   });
 };
