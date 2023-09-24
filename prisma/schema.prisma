@@ -1,9 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
-  // output = "./generated/client"
 }
 
 datasource db {
@@ -11,22 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model SuperUser {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  username  String?
+  firstName String
+  lastName  String
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Admin {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  firstName String
+  lastName  String
+  password  String
+  websites  Website[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  firstName String
+  lastName  String
+  password  String
+  website   Website  @relation(fields: [websiteId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  websiteId Int
+}
+
+model Website {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  url       String    @unique
+  services  Service[]
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  Admin     Admin?    @relation(fields: [adminId], references: [id])
+  adminId   Int?
+  User      User[]
+}
+
+model Service {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  websites  Website[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// ==== E-commerce models ====
+
 model Category {
-  id               Int      @id @default(autoincrement())
-  name             String   @unique
+  id               Int       @id @default(autoincrement())
+  name             String    @unique
   quantityProducts Int
-  slug             String   @unique
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  slug             String    @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   products         Product[]
 }
 
