@@ -27,6 +27,7 @@ async function seed() {
     await prisma.superUser.deleteMany();
 
     // E-commerce
+    await prisma.image.deleteMany();
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
   }

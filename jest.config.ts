@@ -6,7 +6,7 @@ const config: Config.InitialOptions = {
   verbose: true, // Output more information
   collectCoverage: true, // Collect coverage information
   collectCoverageFrom: [
-    "<rootDir>/src/app/**/*.ts", // Collect coverage from all .ts files in the src folder
+    "<rootDir>/src/useCases/*.ts", // Collect coverage from use cases
   ],
 };
 
