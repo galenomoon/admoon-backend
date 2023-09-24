@@ -4,6 +4,16 @@ import { IUser } from "../interfaces/user";
 const prisma = new PrismaClient();
 
 export default class AdminModel {
+
+  async getAll() {
+    const admins = await prisma.admin.findMany({
+      include: {
+        websites: true,
+      }
+    })
+    return admins;
+  }
+
   async getByEmail(email: string) {
     const admin = await prisma.admin.findUnique({
       where: { email },

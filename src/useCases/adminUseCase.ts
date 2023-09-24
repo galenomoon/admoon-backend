@@ -6,6 +6,11 @@ import { comparePasswords, generateToken, hashPassword } from "../utils/auth";
 const adminModel = new AdminModel();
 
 export default class UserUseCase {
+  async getAll() {
+    const admins = await adminModel.getAll();
+    return admins;
+  }
+
   async login({ email, password }: IUser) {
     const user = await adminModel.getByEmail(email);
     if (!user) throw new AppError("User not found", 404);

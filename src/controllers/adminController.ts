@@ -4,6 +4,11 @@ import AdminUseCase from "../useCases/adminUseCase";
 const adminUseCase = new AdminUseCase();
 
 export default class AdminController {
+  async getAll(req: Request, res: Response) {
+    const admins = await adminUseCase.getAll();
+    return res.status(200).json(admins);
+  }
+
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
     const auth = await adminUseCase.login({ email, password });
@@ -19,11 +24,5 @@ export default class AdminController {
       lastName,
     });
     return res.status(201).json(auth);
-  }
-
-  async currentUser(req: any, res: Response) {
-    const currentUserId = req.currentUserId;
-    const currentUser = await adminUseCase.currentUser(currentUserId);
-    return res.status(200).json(currentUser);
   }
 }

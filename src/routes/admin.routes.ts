@@ -6,7 +6,10 @@ const adminRoutes = Router();
 
 const adminController = new AdminController();
 
-adminRoutes.get("/current_user", authenticateToken, adminController.currentUser)
+//REST ROUTES
+adminRoutes.get("/", adminController.getAll);
+
+//CUSTOM ROUTES
 adminRoutes.post("/login", adminController.login)
 adminRoutes.post("/register", adminController.register)
 
