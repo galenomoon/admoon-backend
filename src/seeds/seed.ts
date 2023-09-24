@@ -11,30 +11,28 @@ import categories from "../mocks/categories";
 import ProductModel from "../models/productModel";
 import CategoryModel from "../models/categoryModel";
 
-//useCases
-import AuthUseCase from "../useCases/authUseCase";
 
 const prisma = new PrismaClient();
 
 const productModel = new ProductModel();
 const categoryModel = new CategoryModel();
 
-const authUseCase = new AuthUseCase();
-
 async function seed() {
   async function cleanDB() {
     console.log("Database cleaned.");
+
+    // Auth
+    await prisma.user.deleteMany();
+    await prisma.admin.deleteMany();
+    await prisma.superUser.deleteMany();
+
+    // E-commerce
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
-    await prisma.user.deleteMany();
   }
 
-  try {
-    await cleanDB();
-
-    console.log("Seeding database...");
-    await authUseCase.register({ email: "galenomoon@admin.com", password: "@Apollo11" });
-
+  async function ecommerce() {
+    console.log("E-commerce seeded.");
     let newCategories: Promise<Category>[] = [];
     categories.forEach((name) => {
       const newCategory = categoryModel.create({ name });
@@ -53,6 +51,11 @@ async function seed() {
         });
       });
     });
+  }
+
+  try {
+    await cleanDB();
+    // await ecommerce();
   } catch (error) {
     console.error(error);
   } finally {
