@@ -4,13 +4,19 @@ import { IUser } from "../interfaces/user";
 const prisma = new PrismaClient();
 
 export default class AdminModel {
-
   async getAll() {
     const admins = await prisma.admin.findMany({
-      include: {
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
         websites: true,
-      }
-    })
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
     return admins;
   }
 
