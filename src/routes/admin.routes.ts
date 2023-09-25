@@ -8,6 +8,7 @@ const adminController = new AdminController();
 
 //REST ROUTES
 adminRoutes.get("/", adminController.getAll);
+adminRoutes.put("/:id", adminController.update);
 
 //CUSTOM ROUTES
 adminRoutes.post("/login", adminController.login)

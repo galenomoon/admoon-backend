@@ -45,4 +45,20 @@ export default class UserUseCase {
     const token = generateToken({ id: user.id, email: user.email });
     return { token };
   }
+
+  async update({ id, firstName, lastName, password }: IUser) {
+    if (!id) throw new AppError("User id is required");
+    if (!firstName) throw new AppError("First name is required");
+    if (!lastName) throw new AppError("Last name is required");
+    if (!password) throw new AppError("Password is required");
+
+    const hashedPassword = await hashPassword(password);
+    const user = await adminModel.update({
+      id,
+      firstName,
+      lastName,
+      password: hashedPassword,
+    } as IUser);
+    return user;
+  }
 }

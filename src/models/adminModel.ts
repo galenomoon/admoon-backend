@@ -45,4 +45,12 @@ export default class AdminModel {
       email: admin?.email,
     };
   }
+
+  async update({ id, firstName, lastName, password }: IUser) {
+    const admin = await prisma.admin.update({
+      where: { id },
+      data: { firstName, lastName, password },
+    });
+    return admin;
+  }
 }

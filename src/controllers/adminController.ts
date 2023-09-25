@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import AdminUseCase from "../useCases/adminUseCase";
+import { IUser } from "../interfaces/user";
 
 const adminUseCase = new AdminUseCase();
 
@@ -24,5 +25,17 @@ export default class AdminController {
       lastName,
     });
     return res.status(201).json(auth);
+  }
+
+  async update(req: Request, res: Response) {
+    const { firstName, lastName, password } = req.body;
+    const { id } = req.params;
+    const admin = await adminUseCase.update({
+      id: Number(id),
+      firstName,
+      lastName,
+      password,
+    } as IUser);
+    return res.status(200).json(admin);
   }
 }
