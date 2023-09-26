@@ -61,4 +61,9 @@ export default class UserUseCase {
     } as IUser);
     return user;
   }
+
+  async delete(id: number) {
+    if (!id) throw new AppError("User id is required");
+    return await adminModel.delete(id);
+  }
 }

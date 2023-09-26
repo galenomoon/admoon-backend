@@ -53,4 +53,12 @@ export default class AdminModel {
     });
     return admin;
   }
+
+  async delete(id: number) {
+    await prisma.admin.delete({
+      where: { id },
+    });
+
+    return await this.getAll();
+  }
 }
