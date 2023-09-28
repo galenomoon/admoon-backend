@@ -1,4 +1,5 @@
 //interfaces
+import { AppError } from "../errors/appError";
 import { IService } from "../interfaces/service";
 import { IWebsite } from "../interfaces/website";
 
@@ -59,16 +60,23 @@ export default class WebsiteModel {
   }
 
   async handleServices(id: number, services: IService[]) {
-    const website = await prisma.website.update({
-      where: { id },
-      data: {
-        services: {
-          deleteMany: {},
-          create: services,
+    try {
+      const completeWebsite = await this.getById(id);
+      const website = await prisma.website.update({
+        where: { id },
+        data: {
+          ...completeWebsite,
+          services: {
+            set: services,
+          },
         },
-      },
-    });
+        include: { admin: true, services: true },
+      });
 
-    return website;
+      return website;
+    } catch (error) {
+      console.error(error);
+      throw new AppError("Error on handle services", 500);
+    }
   }
 }

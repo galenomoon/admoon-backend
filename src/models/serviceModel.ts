@@ -10,7 +10,6 @@ export default class ServiceModel {
   async getAll() {
     const services = await prisma.service.findMany({
       orderBy: { id: "asc" },
-      include: { websites: true },
     });
 
     return services;
