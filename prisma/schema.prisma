@@ -43,6 +43,7 @@ model Website {
 model Service {
   id        Int       @id @default(autoincrement())
   name      String    @unique
+  description String
   websites  Website[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
