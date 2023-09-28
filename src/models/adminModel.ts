@@ -38,12 +38,14 @@ export default class AdminModel {
   async getById(id: number) {
     const admin = await prisma.admin.findUnique({
       where: { id },
+      include: { websites: true }
     });
     return {
       id: admin?.id,
       firstName: admin?.firstName,
       lastName: admin?.lastName,
       email: admin?.email,
+      websites: admin?.websites
     };
   }
 
