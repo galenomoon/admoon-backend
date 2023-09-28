@@ -29,24 +29,27 @@ model Admin {
 }
 
 model Website {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  url       String    @unique
-  services  Service[]
-  updatedAt DateTime  @updatedAt
-  createdAt DateTime  @default(now())
-  admin     Admin?    @relation(fields: [adminId], references: [id])
-  adminId   Int?
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  url        String     @unique
+  services   Service[]
+  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime   @default(now())
+  admin      Admin?     @relation(fields: [adminId], references: [id])
+  adminId    Int?
   users      User[]
+  products   Product[]
+  categories Category[]
+  images     Image[]
 }
 
 model Service {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   description String
-  websites  Website[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  websites    Website[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model User {
@@ -71,6 +74,8 @@ model Category {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   products         Product[]
+  Website          Website?  @relation(fields: [websiteId], references: [id])
+  websiteId        Int?
 }
 
 model Product {
@@ -84,6 +89,8 @@ model Product {
   categoryId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  Website     Website? @relation(fields: [websiteId], references: [id])
+  websiteId   Int?
 }
 
 model Image {
@@ -94,4 +101,6 @@ model Image {
   filename  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Website   Website? @relation(fields: [websiteId], references: [id])
+  websiteId Int?
 }
