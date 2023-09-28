@@ -1,4 +1,5 @@
 //interfaces
+import { IService } from "../interfaces/service";
 import { IWebsite } from "../interfaces/website";
 
 //prisma
@@ -10,7 +11,7 @@ export default class WebsiteModel {
   async getAll() {
     const websites = await prisma.website.findMany({
       orderBy: { id: "asc" },
-      include: { admin: true}
+      include: { admin: true, services: true },
     });
 
     return websites;
@@ -55,5 +56,19 @@ export default class WebsiteModel {
     });
 
     return this.getAll();
+  }
+
+  async handleServices(id: number, services: IService[]) {
+    const website = await prisma.website.update({
+      where: { id },
+      data: {
+        services: {
+          deleteMany: {},
+          create: services,
+        },
+      },
+    });
+
+    return website;
   }
 }
