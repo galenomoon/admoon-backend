@@ -10,33 +10,40 @@ import slugParse from "../helpers/slugParse";
 const prisma = new PrismaClient();
 
 export default class CategoryModel {
-  async getAll(slug?: string | undefined, sortBy?: string | undefined) {
+  async getAll(
+    websiteId: number,
+    slug?: string | undefined,
+    sortBy?: string | undefined
+  ) {
     if (!slug) {
       const categories = await prisma.category.findMany({
         orderBy: { [sortBy || "id"]: "asc" },
+        where: { websiteId },
       });
       return categories;
     }
-    const categories = await prisma.category.findUnique({
-      where: { slug },
+    const categories = await prisma.category.findMany({
+      orderBy: { [sortBy || "id"]: "asc" },
+      where: { websiteId, slug },
     });
 
     return categories;
   }
 
-  async getById(id: number) {
+  async getById(websiteId: number, id: number) {
     const category = await prisma.category.findUnique({
-      where: { id },
+      where: { id, websiteId },
     });
     return category;
   }
 
-  async create({ name }: Category) {
+  async create(websiteId: number, { name }: Category) {
     const category = await prisma.category.create({
       data: {
         name,
         quantityProducts: 0,
         slug: slugParse(name),
+        websiteId,
       },
     });
     return category;
@@ -53,14 +60,14 @@ export default class CategoryModel {
     });
   }
 
-  async getByName(name: string) {
-    const category = await prisma.category.findUnique({
-      where: { name },
+  async getByName(websiteId: number, name: string) {
+    const category = await prisma.category.findMany({
+      where: { name, websiteId },
     });
     return category;
   }
 
-  async update(id: number, { name }: Category) {
+  async update(websiteId: number, id: number, { name }: Category) {
     const category = await prisma.category.update({
       where: { id },
       data: { name, slug: slugParse(name) },
@@ -68,7 +75,7 @@ export default class CategoryModel {
     return category;
   }
 
-  async delete(id: number) {
+  async delete(websiteId: number, id: number) {
     await prisma.image.deleteMany({
       where: { product: { categoryId: id } },
     });
@@ -81,12 +88,12 @@ export default class CategoryModel {
       where: { id },
     });
 
-    return this.getAll();
+    return this.getAll(websiteId);
   }
 
-  async getProducts(id: number) {
+  async getProducts(websiteId: number, id: number) {
     const products = await prisma.product.findMany({
-      where: { categoryId: id },
+      where: { categoryId: id, websiteId },
       include: { images: true },
     });
     return products;
