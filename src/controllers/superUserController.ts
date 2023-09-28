@@ -20,10 +20,4 @@ export default class SuperUserController {
     });
     return res.status(201).json(auth);
   }
-
-  async currentUser(req: any, res: Response) {
-    const currentUserId = req.currentUserId;
-    const currentUser = await superUserUseCase.currentUser(currentUserId);
-    return res.status(200).json(currentUser);
-  }
 }
