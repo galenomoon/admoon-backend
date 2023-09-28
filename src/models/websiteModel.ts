@@ -21,6 +21,7 @@ export default class WebsiteModel {
   async getById(id: number) {
     const website = await prisma.website.findUnique({
       where: { id },
+      include: { admin: true, services: true },
     });
     return website;
   }
@@ -61,7 +62,9 @@ export default class WebsiteModel {
 
   async handleServices(id: number, services: IService[]) {
     try {
-      const completeWebsite = await this.getById(id);
+      const completeWebsite = await prisma.website.findUnique({
+        where: { id },
+      });
       const website = await prisma.website.update({
         where: { id },
         data: {
