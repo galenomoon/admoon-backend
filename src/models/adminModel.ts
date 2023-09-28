@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 export default class AdminModel {
   async getAll() {
     const admins = await prisma.admin.findMany({
+      orderBy: { id: "asc" },
       select: {
         id: true,
         email: true,
