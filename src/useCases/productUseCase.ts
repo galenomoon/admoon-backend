@@ -1,6 +1,6 @@
 //models
 import ProductModel from "../models/productModel";
-import CategoryModel from "../models/categoryModel";
+import CategoryUseCase from "../useCases/categoryUseCase";
 
 //types
 import { Product } from "../interfaces/product";
@@ -22,40 +22,37 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 initializeApp(config.firebaseConfig);
 const storage = getStorage();
 const productModel = new ProductModel();
-const categoryModel = new CategoryModel();
+const categoryUseCase = new CategoryUseCase();
 
 export default class ProductUseCase {
-  async getAll(name?: string, quantity?: number, page?: number) {
-    const products = await productModel.getAll(name, quantity);
+  async getAll(
+    websiteId: number,
+    name?: string,
+    quantity?: number,
+    page?: number
+  ) {
+    const products = await productModel.getAll(websiteId, name, quantity);
     if (!products) throw new AppError("Product not found", 404);
     return paginatedResults(page, products as []);
   }
 
-  async create(product: Product) {
+  async create(websiteId: number, product: Product) {
     hasAllRequiredKeys(product);
 
-    const isCategoryIdValid = await categoryModel.getById(product.categoryId);
+    await categoryUseCase.getById(websiteId, product.categoryId);
 
-    if (!isCategoryIdValid) {
-      throw new AppError("Category not found", 404);
-    }
-
-    return await productModel.create(product);
+    return await productModel.create(websiteId, product);
   }
 
-  async update(id: number, product: Product) {
+  async update(websiteId: number, id: number, product: Product) {
     hasAllRequiredKeys(product);
 
-    const isCategoryIdValid = await categoryModel.getById(product.categoryId);
-
-    if (!isCategoryIdValid) {
-      throw new AppError("Category not found", 404);
-    }
+    await categoryUseCase.getById(websiteId, product.categoryId);
 
     return await productModel.update(id, product);
   }
 
-  async delete(id: number) {
+  async delete(websiteId: number, id: number) {
     const product = await productModel.getById(id);
     if (!product) throw new AppError("Product not found", 404);
 
@@ -67,7 +64,7 @@ export default class ProductUseCase {
 
     await Promise.all(deleteImages);
 
-    return await productModel.delete(id);
+    return await productModel.delete(websiteId, id);
   }
 
   async getBySlug(slug: string) {
@@ -85,29 +82,31 @@ export default class ProductUseCase {
   }
 
   async getByCategoryId(
+    websiteId: number,
     categoryId: number,
     name: string | undefined,
     page?: number
   ) {
     if (!categoryId) throw new AppError("categoryId is required", 400);
 
-    const isCategoryIdValid = await categoryModel.getById(categoryId);
-
-    if (!isCategoryIdValid) {
-      throw new AppError("Category not found", 404);
-    }
+    await categoryUseCase.getById(websiteId, categoryId);
 
     const products = await productModel.getByCategoryId(categoryId, name);
     return paginatedResults(page, products as []);
   }
 
   async getByCategorySlug(
+    websiteId: number,
     categorySlug: string,
     name: string | undefined,
     page?: number
   ) {
     if (!categorySlug) throw new AppError("categorySlug is required", 400);
-    const products = await productModel.getByCategorySlug(categorySlug, name);
+    const products = await productModel.getByCategorySlug(
+      websiteId,
+      categorySlug,
+      name
+    );
     if (products === null) throw new AppError("Category not found", 404);
 
     return paginatedResults(page, products as []);

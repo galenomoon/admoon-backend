@@ -14,10 +14,11 @@ const prisma = new PrismaClient();
 const categoryModel = new CategoryModel();
 
 export default class ProductModel {
-  async getAll(name?: string, quantity?: number) {
+  async getAll(websiteId: number, name?: string, quantity?: number) {
     if (!name?.trim()) {
       const allProducts = await prisma.product.findMany({
         orderBy: { id: "asc" },
+        where: { websiteId },
         include: {
           category: true,
           images: true,
@@ -60,7 +61,10 @@ export default class ProductModel {
     return product;
   }
 
-  async create({ name, description, price, categoryId }: Product) {
+  async create(
+    websiteId: number,
+    { name, description, price, categoryId }: Product
+  ) {
     const product = await prisma.product.create({
       data: {
         name,
@@ -68,6 +72,7 @@ export default class ProductModel {
         price,
         categoryId,
         slug: slugParse(name),
+        websiteId,
       },
     });
 
@@ -91,14 +96,14 @@ export default class ProductModel {
     return product;
   }
 
-  async delete(id: number) {
+  async delete(websiteId: number, id: number) {
     const product = await this.getById(id);
     await prisma.image.deleteMany({
       where: { productId: id },
     });
     await prisma.product.delete({ where: { id } });
     await categoryModel.updateCategoryCount(Number(product?.categoryId));
-    return this.getAll();
+    return this.getAll(websiteId);
   }
 
   async getByCategoryId(categoryId: number | string, name: string | undefined) {
@@ -122,23 +127,28 @@ export default class ProductModel {
     return products;
   }
 
-  async getByCategorySlug(categorySlug: string, name: string | undefined) {
-    const category = await prisma.category.findUnique({
-      where: { slug: categorySlug as string },
+  async getByCategorySlug(
+    websiteId: number,
+    categorySlug: string,
+    name: string | undefined
+  ) {
+    const categories = await prisma.category.findMany({
+      where: { slug: categorySlug as string, websiteId },
     });
 
-    if (!category) return null;
+    if (!categories.length) return null;
 
     if (!name) {
       return await prisma.product.findMany({
-        where: { categoryId: category.id },
+        where: { categoryId: categories?.[0]?.id, websiteId },
         include: { category: true, images: true },
       });
     }
 
     return await prisma.product.findMany({
       where: {
-        categoryId: category.id,
+        categoryId: categories?.[0]?.id,
+        websiteId,
         name: {
           contains: name,
           mode: "insensitive",

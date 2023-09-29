@@ -5,8 +5,10 @@ const productUseCase = new ProductUseCase();
 
 export default class ProductController {
   async getAll(req: Request, res: Response) {
+    const { websiteId } = req.params;
     const { q: name, quantity, page } = req.query;
     const products = await productUseCase.getAll(
+      Number(websiteId),
       name as undefined,
       Number(quantity),
       Number(page)
@@ -27,8 +29,9 @@ export default class ProductController {
   }
 
   async create(req: Request, res: Response) {
+    const { websiteId } = req.params;
     const { name, description, price, categoryId } = req.body;
-    const newProduct = await productUseCase.create({
+    const newProduct = await productUseCase.create(Number(websiteId), {
       name,
       description,
       price,
@@ -38,9 +41,9 @@ export default class ProductController {
   }
 
   async update(req: Request, res: Response) {
-    const { id } = req.params;
+    const { id, websiteId } = req.params;
     const { name, description, price, images, categoryId } = req.body;
-    const product = await productUseCase.update(Number(id), {
+    const product = await productUseCase.update(Number(websiteId), Number(id), {
       name,
       description,
       price,
@@ -51,18 +54,19 @@ export default class ProductController {
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    const products = await productUseCase.delete(Number(id));
+    const { id, websiteId } = req.params;
+    const products = await productUseCase.delete(Number(websiteId), Number(id));
     return res.status(200).json(products);
   }
 
   async getByCategory(req: Request, res: Response) {
     const { q: name, page } = req.query;
-    const { categoryIdOrSlug } = req.params;
+    const { categoryIdOrSlug, websiteId } = req.params;
     const isSlug = isNaN(Number(categoryIdOrSlug));
 
     if (isSlug) {
       const products = await productUseCase.getByCategorySlug(
+        Number(websiteId),
         categoryIdOrSlug,
         name as undefined,
         Number(page)
@@ -71,6 +75,7 @@ export default class ProductController {
     }
 
     const products = await productUseCase.getByCategoryId(
+      Number(websiteId),
       Number(categoryIdOrSlug),
       name as undefined,
       Number(page)
