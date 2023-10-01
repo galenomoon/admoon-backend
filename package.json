@@ -9,7 +9,7 @@
     "test": "jest",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "seed": "ts-node ./src/seeds/seedServices.ts",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && npm run seed",
     "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
