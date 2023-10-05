@@ -8,7 +8,7 @@ import { errorHandler } from '../middlewares/errorHandler'
 const server = express()
 
 server.use(cors())
-server.use(express.json())
+server.use(express.json({ limit: '20mb' }))
 server.use(routes)
 server.use(errorHandler)
 
