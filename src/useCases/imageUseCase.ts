@@ -30,28 +30,43 @@ export default class ImageUseCase {
     return image;
   }
 
-  async create(productId: number, image: Express.Multer.File) {
+  async create(productId: number, images: Express.Multer.File[]) {
     const product = await productUseCase.getById(productId);
 
-    try {
-      const storageRef = ref(
-        storage,
-        `/${product?.category?.id}/${product?.id}`
-      );
-      const fileRef = ref(storageRef, image.originalname);
-      const uploadTask = uploadBytesResumable(fileRef, image.buffer);
-      await uploadTask;
-      const url = await getDownloadURL(uploadTask.snapshot.ref);
-      const filename = uploadTask.snapshot.ref.name;
+    for (const image of images) {
+      try {
+        const storageRef = ref(
+          storage,
+          `/${product?.category?.id}/${product?.id}`
+        );
+        const fileRef = ref(storageRef, image.originalname);
+        const uploadTask = uploadBytesResumable(fileRef, image.buffer);
+        await uploadTask;
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        const filename = uploadTask.snapshot.ref.name;
 
-      return await imageModel.create({
-        url,
-        productId: product.id,
-        filename,
-      } as Image);
-    } catch (error) {
-      throw new AppError(`Error uploading image: ${error}`, 500);
+        await imageModel.create({
+          url,
+          productId: product.id,
+          filename,
+        } as Image);
+      } catch (error) {
+        throw new AppError(`Error uploading image: ${error}`, 500);
+      }
     }
+
+    return await this.getByProductId(productId);
+  }
+
+  async shuffleImages(productId: number, images: Express.Multer.File[]) {
+    if (!images.length) throw new AppError("Images not found", 404);
+    const imagesToDelete = await this.getByProductId(productId);
+
+    const requests = imagesToDelete.map(
+      async (image) => await this.delete(image.id)
+    );
+    await Promise.all(requests);
+    return await this.create(productId, images);
   }
 
   async delete(id: number) {

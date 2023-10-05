@@ -98,7 +98,7 @@ model Image {
   url       String
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
-  filename  String   @unique
+  filename  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Website   Website? @relation(fields: [websiteId], references: [id])

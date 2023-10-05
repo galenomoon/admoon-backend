@@ -17,8 +17,8 @@ export default class ImagesController {
 
   async create(req: Request, res: Response) {
     const { productId } = req.params;
-    const image = req.file;
-    const imagesCreated = await imageUseCase.create(Number(productId), image as unknown as Express.Multer.File);
+    const images = req.files;
+    const imagesCreated = await imageUseCase.create(Number(productId), images as unknown as Express.Multer.File[]);
     res.status(201).json(imagesCreated);
   }
 
@@ -26,6 +26,13 @@ export default class ImagesController {
     const { id } = req.params;
     const imageDeleted = await imageUseCase.delete(Number(id));
     res.status(200).json(imageDeleted);
+  }
+
+  async shuffleImages(req: Request, res: Response) {
+    const { productId } = req.params;
+    const images = req.files
+    const imagesShuffled = await imageUseCase.shuffleImages(Number(productId), images as unknown as Express.Multer.File[]);
+    res.status(200).json(imagesShuffled);
   }
 
   async getByProductId(req: Request, res: Response) {

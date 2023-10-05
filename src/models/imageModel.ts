@@ -25,7 +25,7 @@ export default class ImageModel {
       data: {
         url,
         productId,
-        filename: filename || "",
+        filename: filename || "image_" + Date.now(),
       },
     });
   }
@@ -38,6 +38,7 @@ export default class ImageModel {
 
   async getByProductId(productId: number | string) {
     return await prisma.image.findMany({
+      orderBy: { id: "asc" },
       where: { productId: Number(productId) },
       include: { product: true },
     });
