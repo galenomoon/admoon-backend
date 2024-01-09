@@ -31,6 +31,7 @@ export default class ProductModel {
 
     const productsByName = await prisma.product.findMany({
       where: {
+        websiteId,
         name: {
           contains: name,
           mode: "insensitive",
