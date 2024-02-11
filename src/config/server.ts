@@ -2,10 +2,9 @@ import 'express-async-errors'
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import YAML from "yamljs";
 import routes from '../routes'
 import swaggerUi from "swagger-ui-express";
-const swaggerDocument = YAML.load("./src/config/swagger.yaml");
+const swaggerDocument = require('./swagger.json');
 import { errorHandler } from '../middlewares/errorHandler'
 
 const server = express()
