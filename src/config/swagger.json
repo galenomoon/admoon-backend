@@ -5,6 +5,7 @@
     "description": "Welcome to Admoon API documentation",
     "version": "1.0.0"
   },
+  "customCss": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css",
   "servers": [
     {
       "url": "https://admoon-backend.vercel.app/"
