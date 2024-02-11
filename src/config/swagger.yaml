@@ -1,0 +1,403 @@
+openapi: 3.0.0
+info:
+  title: Admoon API
+  description: Welcome to Admoon API documentation
+  version: 1.0.0
+servers:
+  - url: https://admoon-backend.vercel.app/
+tags:
+  - name: SuperUser
+    description: Endpoints for SuperUser
+  - name: Admin
+    description: Endpoints for Admin
+paths:
+# ==========================> Admins
+  /admins:
+    get:
+      tags:
+        - Admin
+      summary: List all admins
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
+  /admins/register:
+    post:
+      tags:
+        - Admin
+      summary: Create a new admin user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+  /admins/login:
+    post:
+      tags:
+        - Admin
+      summary: Login as admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+  /admins/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update an admin user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+    delete:
+      tags:
+        - Admin
+      summary: Delete an admin user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+
+# ==========================> SuperUsers
+  /superusers/register:
+    post:
+      tags:
+        - SuperUser
+      summary: Create a new superuser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperUser'
+  /superusers/login:
+    post:
+      tags:
+        - SuperUser
+      summary: Login as superuser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperUser'
+  /superusers/{id}:
+    delete:
+      tags:
+        - SuperUser
+      summary: Delete a superuser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+
+components:
+  schemas:
+    SuperUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Admin:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        websites:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+              url:
+                type: string
+              updatedAt:
+                type: string
+                format: date-time
+              createdAt:
+                type: string
+                format: date-time
+              adminId:
+                type: integer
+    Website:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        url:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        adminId:
+          type: integer
+        admin:
+          $ref: '#/components/schemas/Admin'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        websites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Website'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        websiteId:
+          type: integer
+        website:
+          $ref: '#/components/schemas/Website'
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        quantityProducts:
+          type: integer
+        slug:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        websiteId:
+          type: integer
+        Website:
+          $ref: '#/components/schemas/Website'
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        slug:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        categoryId:
+          type: integer
+        category:
+          $ref: '#/components/schemas/Category'
+        websiteId:
+          type: integer
+        Website:
+          $ref: '#/components/schemas/Website'
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        url:
+          type: string
+        productId:
+          type: integer
+        product:
+          $ref: '#/components/schemas/Product'
+        filename:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        websiteId:
+          type: integer
+        Website:
+          $ref: '#/components/schemas/Website'
