@@ -18,8 +18,6 @@ export default class SuperUserModel {
     return superUser;
   }
 
-  
-
   async getById(id: number) {
     const superUser = await prisma.superUser.findUnique({
       where: { id },
@@ -30,5 +28,11 @@ export default class SuperUserModel {
       lastName: superUser?.lastName,
       email: superUser?.email,
     };
+  }
+
+  async delete(id: number) {
+    await prisma.superUser.delete({
+      where: { id },
+    });
   }
 }

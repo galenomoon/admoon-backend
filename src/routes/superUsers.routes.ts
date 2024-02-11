@@ -7,5 +7,6 @@ const superUserController = new SuperUserController();
 
 superUserRoutes.post("/login", superUserController.login)
 superUserRoutes.post("/register", superUserController.register)
+superUserRoutes.delete("/:id", superUserController.delete)
 
 export default superUserRoutes;

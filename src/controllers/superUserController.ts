@@ -20,4 +20,10 @@ export default class SuperUserController {
     });
     return res.status(201).json(auth);
   }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    await superUserUseCase.delete(id);
+    return res.status(204).send();
+  }
 }

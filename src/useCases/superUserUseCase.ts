@@ -45,4 +45,9 @@ export default class SuperUserUseCase {
       email: user.email,
     };
   }
+
+  async delete(id: string) {
+    if (!Number(id)) throw new AppError("Id is required");
+    await superUserModel.delete(Number(id));
+  }
 }
