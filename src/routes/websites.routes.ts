@@ -7,12 +7,14 @@ import { authenticateToken } from "../middlewares/authMiddleware";
 import WebsiteController from "../controllers/websitesController";
 import CategoryController from "../controllers/categoriesController";
 import ProductController from "../controllers/productsController";
+import AddressController from "../controllers/addressController";
 
 const websitesRoutes = Router();
 
 const websiteController = new WebsiteController();
 const productController = new ProductController();
 const categoryController = new CategoryController();
+const addressController = new AddressController();
 
 //REST
 websitesRoutes.get("/", authenticateToken, websiteController.getAll);
@@ -44,5 +46,13 @@ websitesRoutes.delete("/:websiteId/products/:id", authenticateToken, productCont
 
 //CUSTOM 
 websitesRoutes.get("/:websiteId/products/category/:categoryIdOrSlug", productController.getByCategory);
+
+// ------------------ WEBSITE ADDRESS ROUTES ------------------
+
+//REST
+websitesRoutes.get("/:websiteId/address/", addressController.getAdressByWebsiteId);
+websitesRoutes.post("/:websiteId/address/", authenticateToken, addressController.create);
+websitesRoutes.put("/:websiteId/address/:id", authenticateToken, addressController.update);
+websitesRoutes.delete("/:websiteId/address/:id", authenticateToken, addressController.delete);
 
 export default websitesRoutes;

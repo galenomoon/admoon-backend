@@ -4,6 +4,11 @@ import { IUser } from "../interfaces/user";
 const prisma = new PrismaClient();
 
 export default class SuperUserModel {
+  async getAll() {
+    const superUsers = await prisma.superUser.findMany();
+    return superUsers;
+  }
+
   async getByEmail(email: string) {
     const superUser = await prisma.superUser.findUnique({
       where: { email },

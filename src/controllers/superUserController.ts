@@ -4,6 +4,12 @@ import SuperUserUseCase from "../useCases/superUserUseCase";
 const superUserUseCase = new SuperUserUseCase();
 
 export default class SuperUserController {
+
+  async getAll(req: Request, res: Response) {
+    const superUsers = await superUserUseCase.getAll();
+    return res.status(200).json(superUsers);
+  }
+
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
     const auth = await superUserUseCase.login({ email, password });

@@ -41,6 +41,7 @@ model Website {
   products   Product[]
   categories Category[]
   images     Image[]
+  address    Address[]
 }
 
 model Service {
@@ -103,4 +104,17 @@ model Image {
   updatedAt DateTime @updatedAt
   Website   Website? @relation(fields: [websiteId], references: [id])
   websiteId Int?
+}
+
+// ==== Portfolio models ====
+
+model Address {
+  id        Int      @id @default(autoincrement())
+  latitude  Float
+  longitude Float
+  fullAddress String
+  websiteId Int
+  website   Website  @relation(fields: [websiteId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

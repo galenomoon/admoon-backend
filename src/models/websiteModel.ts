@@ -12,7 +12,7 @@ export default class WebsiteModel {
   async getAll() {
     const websites = await prisma.website.findMany({
       orderBy: { id: "asc" },
-      include: { admin: true, services: true },
+      include: { admin: true, services: true, address: true },
     });
 
     return websites;
@@ -21,7 +21,7 @@ export default class WebsiteModel {
   async getById(id: number) {
     const website = await prisma.website.findUnique({
       where: { id },
-      include: { admin: true, services: true },
+      include: { admin: true, services: true, address: true },
     });
     return website;
   }
