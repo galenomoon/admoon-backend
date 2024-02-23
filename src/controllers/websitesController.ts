@@ -7,8 +7,12 @@ const websiteUseCase = new WebsiteUseCase();
 
 export default class WebsiteController {
   async getAll(_: Request, res: Response) {
-    const websites = await websiteUseCase.getAll();
-    return res.status(200).json(websites);
+    try {
+      const websites = await websiteUseCase.getAll();
+      return res.status(200).json(websites);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
 
   async getById(req: Request, res: Response) {

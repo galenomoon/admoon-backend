@@ -11,3 +11,6 @@ node_modules
 
 # TESTS
 /coverage
+/.dump
+
+.DS_Store
