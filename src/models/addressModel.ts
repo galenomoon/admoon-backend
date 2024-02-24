@@ -21,6 +21,13 @@ export default class AddressModel {
     return address;
   }
 
+  async getById(websiteId: number, id: number) {
+    const address = await prisma.address.findFirst({
+      where: { id, websiteId },
+    });
+    return address;
+  }
+
   async update(
     websiteId: number,
     { id, fullAddress, latitude, longitude }: Address

@@ -18,6 +18,12 @@ export default class AddressUseCase {
     return await addressModel.create(websiteId, address);
   }
 
+  async getById(websiteId: number, id: number) {
+    const address = await addressModel.getById(websiteId, id);
+    if (!address) throw new AppError("Address not found", 404);
+    return address;
+  }
+
   async getAdressByWebsiteId(websiteId: number) {
     return await addressModel.getAdressByWebsiteId(websiteId);
   }

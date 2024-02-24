@@ -51,6 +51,7 @@ websitesRoutes.get("/:websiteId/products/category/:categoryIdOrSlug", productCon
 
 //REST
 websitesRoutes.get("/:websiteId/address/", addressController.getAdressByWebsiteId);
+websitesRoutes.get("/:websiteId/address/:id", addressController.getById);
 websitesRoutes.post("/:websiteId/address/", authenticateToken, addressController.create);
 websitesRoutes.put("/:websiteId/address/:id", authenticateToken, addressController.update);
 websitesRoutes.delete("/:websiteId/address/:id", authenticateToken, addressController.delete);

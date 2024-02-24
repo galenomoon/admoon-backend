@@ -23,6 +23,12 @@ export default class AddressController {
     return res.status(200).json(address);
   }
 
+  async getById(req: Request, res: Response) {
+    const { id, websiteId } = req.params;
+    const address = await addressUseCase.getById(Number(websiteId), Number(id));
+    return res.status(200).json(address);
+  }
+
   async update(req: Request, res: Response) {
     const { id, websiteId } = req.params;
     const { fullAddress, latitude, longitude } = req.body;
