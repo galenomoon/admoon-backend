@@ -3,9 +3,17 @@ export interface IContact {
   email: string;
   phone: string;
   office: string;
-  social_networks: string;
-  link_social_networks: string;
-  created_at?: string;
-  updated_at?: string;
-  deleted_at?: string;
+  links: Link[];
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+}
+
+export interface Link {
+  id: number;
+  social_network: string;
+  link: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }

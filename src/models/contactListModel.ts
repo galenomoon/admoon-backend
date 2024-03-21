@@ -16,36 +16,24 @@ export default class ContactModel {
     });
   }
 
-  async create({
-    email,
-    phone,
-    office,
-    social_networks,
-    link_social_networks,
-  }: IContact) {
+  async create({ email, phone, office, links }: IContact) {
     return await prisma.contact.create({
       data: {
         email,
         phone,
         office,
-        social_networks,
-        link_social_networks,
+        links,
       },
     });
   }
 
-  async update(
-    id: number,
-    { email, phone, office, social_networks, link_social_networks }: IContact
-  ) {
+  async update(id: number, { email, phone, office }: IContact) {
     return await prisma.contact.update({
       where: { id },
       data: {
         email,
         phone,
         office,
-        social_networks,
-        link_social_networks,
       },
     });
   }
