@@ -42,6 +42,7 @@ model Website {
   categories Category[]
   images     Image[]
   address    Address[]
+  contacts    Contact[]
 }
 
 model Service {
@@ -115,6 +116,29 @@ model Address {
   fullAddress String
   websiteId Int
   website   Website?  @relation(fields: [websiteId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  email     String
+  phone     String
+  name      String
+  office    String
+  links   Link[]
+  websiteId Int
+  website   Website?  @relation(fields: [websiteId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Link {
+  id        Int      @id @default(autoincrement())
+  url       String
+  label     String
+  contactId Int
+  contact   Contact  @relation(fields: [contactId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
