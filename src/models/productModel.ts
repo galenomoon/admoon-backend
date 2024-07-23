@@ -17,7 +17,7 @@ export default class ProductModel {
   async getAll(websiteId: number, name?: string, quantity?: number) {
     if (!name?.trim()) {
       const allProducts = await prisma.product.findMany({
-        orderBy: { id: "asc" },
+        orderBy: { id: "desc" },
         where: { websiteId },
         include: {
           category: true,
@@ -115,7 +115,7 @@ export default class ProductModel {
       });
 
     const products = await prisma.product.findMany({
-      orderBy: { id: "asc" },
+      orderBy: { id: "desc" },
       include: { category: true, images: true },
       where: {
         categoryId: Number(categoryId),
@@ -147,6 +147,7 @@ export default class ProductModel {
     }
 
     return await prisma.product.findMany({
+      orderBy: { id: "desc" },
       where: {
         categoryId: categories?.[0]?.id,
         websiteId,
