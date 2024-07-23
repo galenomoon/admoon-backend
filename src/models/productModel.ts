@@ -141,6 +141,7 @@ export default class ProductModel {
 
     if (!name) {
       return await prisma.product.findMany({
+        orderBy: { id: "desc" },
         where: { categoryId: categories?.[0]?.id, websiteId },
         include: { category: true, images: true },
       });
