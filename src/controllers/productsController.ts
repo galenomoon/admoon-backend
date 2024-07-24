@@ -6,12 +6,13 @@ const productUseCase = new ProductUseCase();
 export default class ProductController {
   async getAll(req: Request, res: Response) {
     const { websiteId } = req.params;
-    const { q: name, quantity, page } = req.query;
+    const { q: name, quantity, page, perPage } = req.query;
     const products = await productUseCase.getAll(
       Number(websiteId),
       name as undefined,
       Number(quantity),
-      Number(page)
+      Number(page),
+      Number(perPage)
     );
     return res.status(200).json(products);
   }
@@ -60,7 +61,7 @@ export default class ProductController {
   }
 
   async getByCategory(req: Request, res: Response) {
-    const { q: name, page } = req.query;
+    const { q: name, page, perPage } = req.query;
     const { categoryIdOrSlug, websiteId } = req.params;
     const isSlug = isNaN(Number(categoryIdOrSlug));
 
@@ -69,7 +70,8 @@ export default class ProductController {
         Number(websiteId),
         categoryIdOrSlug,
         name as undefined,
-        Number(page)
+        Number(page),
+        Number(perPage)
       );
       return res.status(200).json(products);
     }
@@ -78,7 +80,8 @@ export default class ProductController {
       Number(websiteId),
       Number(categoryIdOrSlug),
       name as undefined,
-      Number(page)
+      Number(page),
+      Number(perPage)
     );
     return res.status(200).json(products);
   }
