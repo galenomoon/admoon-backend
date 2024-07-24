@@ -6,7 +6,7 @@ const productUseCase = new ProductUseCase();
 export default class ProductController {
   async getAll(req: Request, res: Response) {
     const { websiteId } = req.params;
-    const { q: name, quantity, page, perPage } = req.query;
+    const { q: name, quantity, page, perPage = 10 } = req.query;
     const products = await productUseCase.getAll(
       Number(websiteId),
       name as undefined,
@@ -61,7 +61,7 @@ export default class ProductController {
   }
 
   async getByCategory(req: Request, res: Response) {
-    const { q: name, page, perPage } = req.query;
+    const { q: name, page, perPage = 10 } = req.query;
     const { categoryIdOrSlug, websiteId } = req.params;
     const isSlug = isNaN(Number(categoryIdOrSlug));
 
