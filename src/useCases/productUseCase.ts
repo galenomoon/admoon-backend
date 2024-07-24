@@ -34,7 +34,7 @@ export default class ProductUseCase {
   ) {
     const products = await productModel.getAll(websiteId, name, quantity);
     if (!products) throw new AppError("Product not found", 404);
-    return paginatedResults(page, products as [], perPage);
+    return paginatedResults(page, products as [], (perPage || products.length));
   }
 
   async create(websiteId: number, product: Product) {
@@ -94,7 +94,7 @@ export default class ProductUseCase {
     await categoryUseCase.getById(websiteId, categoryId);
 
     const products = await productModel.getByCategoryId(categoryId, name);
-    return paginatedResults(page, products as [], perPage);
+    return paginatedResults(page, products as [], (perPage || products.length));
   }
 
   async getByCategorySlug(
@@ -112,6 +112,6 @@ export default class ProductUseCase {
     );
     if (products === null) throw new AppError("Category not found", 404);
 
-    return paginatedResults(page, products as [], perPage);
+    return paginatedResults(page, products as [], (perPage || products.length));
   }
 }
