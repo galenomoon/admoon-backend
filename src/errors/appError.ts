@@ -7,4 +7,11 @@ export class AppError {
     this.message = message;
     this.statusCode = statusCode;
   }
+
+  response() {
+    return {
+      message: this.message,
+      statusCode: this.statusCode,
+    };
+  }
 }

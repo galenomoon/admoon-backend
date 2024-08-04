@@ -9,6 +9,7 @@ import CategoryModel from "./categoryModel";
 
 //helpers
 import slugParse from "../helpers/slugParse";
+import { AppError } from "../errors/appError";
 
 const prisma = new PrismaClient();
 const categoryModel = new CategoryModel();
@@ -159,5 +160,30 @@ export default class ProductModel {
       },
       include: { category: true, images: true },
     });
+  }
+
+  async getSlugs(websiteId: number) {
+    const slugs = await prisma.website.findUnique({
+      where: { id: websiteId },
+      select: {
+        products: {
+          select: {
+            slug: true,
+            category: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!slugs) throw new AppError("Website not found", 404);
+
+    return slugs.products.map((product) => ({
+      productSlug: product.slug,
+      categorySlug: product.category.slug,
+    }));
   }
 }

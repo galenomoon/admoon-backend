@@ -85,4 +85,10 @@ export default class ProductController {
     );
     return res.status(200).json(products);
   }
+
+  async getSlugs(req: Request, res: Response) {
+    const { websiteId } = req.params;
+    const slugs = await productUseCase.getSlugs(Number(websiteId));
+    return res.status(200).json(slugs);
+  }
 }

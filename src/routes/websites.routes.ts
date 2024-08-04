@@ -46,6 +46,7 @@ websitesRoutes.delete("/:websiteId/products/:id", authenticateToken, productCont
 
 //CUSTOM 
 websitesRoutes.get("/:websiteId/products/category/:categoryIdOrSlug", productController.getByCategory);
+websitesRoutes.get("/:websiteId/slugs", productController.getSlugs);
 
 // ------------------ WEBSITE ADDRESS ROUTES ------------------
 
